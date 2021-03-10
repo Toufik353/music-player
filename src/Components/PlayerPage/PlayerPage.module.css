@@ -52,6 +52,9 @@ body{
 .SongControls{
     margin-top: 150px;
 }
+.RandomButtonColor{
+    color:darkgoldenrod
+}
 
 .ControlWrapper{
     display: flex;

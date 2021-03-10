@@ -20,7 +20,8 @@ export default class PlayerPage extends Component {
             audioDuration: 0,
             currentDuration: 0,
             audioMute: false,
-            currentProgressBar: 0
+            currentProgressBar: 0,
+            shuffleStatus : false
 
         }
     }
@@ -167,7 +168,8 @@ export default class PlayerPage extends Component {
     }
 
     handleShuffle = () => {
-        alert("Ended")
+        alert(this.state.shuffleStatus)
+        if(this.state.shuffleStatus === true){
         // alert(Math.floor(Math.random() * 7))
         let randomNum = (Math.floor(Math.random() * 7))
         alert(randomNum)
@@ -175,7 +177,13 @@ export default class PlayerPage extends Component {
             this.setState({ id: randomNum })
         }
     }
+}
 
+
+    HandleShuffleState =()=>{
+       alert("clicked")
+       this.setState({shuffleStatus : !this.state.shuffleStatus})
+    }
     render() {
 
         // console.log(this.state.AudioDuration)
@@ -199,7 +207,7 @@ export default class PlayerPage extends Component {
                         <div className={classes.ControlWrapper}>
 
                             {/* // onTimeUpdate inbuild method to keep updating the time every seconde with refrence to the current time */}
-                            <audio src={this.state.data.file} preload type="audio/mp3" ref={this.playPause} onTimeUpdate={(e) => { this.audioProgress(e) }} onEnded={() => this.handleShuffle()}> </audio>
+                            <audio src={this.state.data.file} preload type="audio/mp3" ref={this.playPause} onTimeUpdate={(e) => { this.audioProgress(e) }}  onEnded={() => this.handleShuffle()}> </audio>
                             <input type="range" class={classes.Progressbar} min="0" max={this.state.audioDuration} ref={this.inputProgress} className={classes.AudiProgressBar} value={this.state.currentDuration} onChange={(e) => this.handleProgressBar(e)} />
 
                         </div>
@@ -207,7 +215,7 @@ export default class PlayerPage extends Component {
                             <p className={classes.SongNames}>{this.state.data.track}</p>
                             <div className={classes.Icons}>
 
-                                < FontAwesomeIcon icon={faRandom} className={classes.RandomButton} />
+                                < FontAwesomeIcon icon={faRandom} className={this.state.shuffleStatus === true ?  classes.RandomButtonColor : classes.RandomButton } onClick={this.HandleShuffleState}/>
                                 < FontAwesomeIcon icon={faStepBackward} className={classes.backwordButton} onClick={this.HandleBackwordButton} />
                                 {this.state.playButton === "true" ?
                                     < FontAwesomeIcon icon={faPlayCircle} className={classes.PlayButton} onClick={this.HandlePlay} />
