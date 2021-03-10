@@ -14,7 +14,7 @@ export default class PlayerPage extends Component {
         this.state = {
             data: {},
             playButton: 'true',
-            id: 1,
+            id: this.props.match.params.vId,
             value: 0,
             v: 0,
             audioDuration: 0,
@@ -27,15 +27,21 @@ export default class PlayerPage extends Component {
 
 
     componentDidMount() {
-        this.setState({ id: this.props.match.params.vId })
+        // this.setState({ id:  })
+        //   this.setState({currentProgressBar:0})
         // this.setState({ audioDuration: 0})
-        // this.setState({ audioDuration: this.playPause.current.duration })
+
         axios.get(`https://5ff9e67117386d0017b52317.mockapi.io/musicplayer/${this.state.id}`)
             .then(response => {
                 console.log(response.data)
-                alert("cdm")
-                this.setState({ data: response.data })
+                // alert("cdm")
+                // this.setState({currentProgressBar:0})
+               
+
+                    this.setState({ data: response.data })
+                
                 console.log(this.state.data.file.duration)
+                this.setState({ audioDuration: this.playPause.current.duration })
                 // this.setState({ audioDuration: JSON.parse(this.playPause.current.duration )})
             })
 
@@ -45,14 +51,19 @@ export default class PlayerPage extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+
+
         // this.setState({ id: this.props.match.params.vId })
         if (prevState.id !== this.state.id) {
 
-            // this.setState({ audioDuration: JSON.parse(this.playPause.current.duration)})
             axios.get(`https://5ff9e67117386d0017b52317.mockapi.io/musicplayer/${this.state.id}`)
                 .then(response => {
                     console.log(response.data)
                     this.setState({ data: response.data })
+                    this.setState({ audioDuration: JSON.parse(this.playPause.current.duration) })
+                    // this.setState({currentProgressBar:0})
+                    // this.inputProgress.current.va
+
                 })
                 .catch(err => {
                     console.log("Error")
@@ -63,13 +74,15 @@ export default class PlayerPage extends Component {
 
 
     HandlePlay = () => {
+        // this.setState({currentProgressBar:0})
+        //  this.setState({ currentDuration: this.playPause.current.currentTime })
         this.setState({ audioDuration: this.playPause.current.duration })
         // this.setState({ playButton: !this.state.playButton })
         if (this.state.playButton === 'true') {
 
             this.playPause.current.play()
             // console.log()
-            this.setState({ currentDuration: this.playPause.current.currentTime })
+
 
             this.setState({ playButton: 'false' })
         } else {
@@ -82,18 +95,27 @@ export default class PlayerPage extends Component {
 
 
     HandleForwordButton = () => {
-        this.setState({ audioDuration: this.playPause.current.duration })
-        // this.setState({ currentProgressBar: this.state.value })
-        this.setState({value : this.playPause.current.currentDuration})
-                if (this.state.id !== this.props.location.state) {
+        this.setState({ currentProgressBar: 0 })
+        console.log(this.inputProgress.current)
+        //  if(this.state.audioDuration==this.playPause.current.duration){
+        // this.setState({ playButton: 'true' })
+        // this.playPause.current.play()
+        // this.setState({ audioDuration: this.playPause.current.duration })
+
+        if (this.state.id !== this.props.location.state) {
+            // if(this.playPause.current.duration){
             this.setState({ id: parseInt(this.state.id) + 1 })
+            // alert("bro")
+            // this.setState({currentProgressBar:0})
             alert(this.state.id)
         } else {
             this.setState({ id: 0 })
         }
     }
+    // }
 
     HandleBackwordButton = () => {
+        this.inputProgress.current.value = 0;
         this.setState({ audioDuration: this.playPause.current.duration })
         if (this.state.id !== 0) {
             this.setState({ id: parseInt(this.state.id) - 1 })
@@ -126,27 +148,32 @@ export default class PlayerPage extends Component {
         }
     }
 
-    AudiProgressBar = (e) => {
-        console.log(e.target.value)
-        e.target.value = this.state.currentDuration
-        this.setState({ currentDuration: e.target.value })
-    }
 
-    //To Handle the auto forword of the audio progress bar
     audioProgress = (e) => {
-        console.log(e)
-        console.log(e.nativeEvent.srcElement.currentTime)
+        // console.log(e)
+        // console.log(e.nativeEvent.srcElement.currentTime)
         this.setState({ currentDuration: e.nativeEvent.srcElement.currentTime })
-        this.setState({ currentProgressBar: (this.state.currentDuration / this.state.audioDuration) * 100 })
+        this.setState({ audioDuration: e.nativeEvent.srcElement.duration })
+        this.setState({ currentProgressBar: Math.floor(((this.state.currentDuration * 100) / this.state.audioDuration)) })
+        // console.log(this.state.currentProgressBar)
     }
 
-    handleProgressBar = () => {
-        this.setState({ currentProgressBar: this.state.value })
+    handleProgressBar = (e) => {
+        console.log(e.target.value)
+
+        // this.setState({value : this.state.currentDuration})
+        this.setState({ value: (e.target.value) })
+        this.playPause.current.currentTime = this.state.value
+    }
+
+    handleShuffle = () => {
+        console.log(Math.floor(Math.random) * 6)
+        //    alert("hey")
     }
 
     render() {
 
-        console.log(this.state.AudioDuration)
+        // console.log(this.state.AudioDuration)
         return (
             <div className={classes.wrap}>
                 <div className={classes.Opacity}>
@@ -167,8 +194,8 @@ export default class PlayerPage extends Component {
                         <div className={classes.ControlWrapper}>
 
                             {/* // onTimeUpdate inbuild method to keep updating the time every seconde with refrence to the current time */}
-                            <audio src={this.state.data.file} type="audio/mp3" ref={this.playPause} onTimeUpdate={(e) => { this.audioProgress(e) }}> </audio>
-                            <input type="range" class={classes.Progressbar} ref={this.inputProgress} className={classes.AudiProgressBar} value={this.state.currentProgressBar} onChange={this.handleProgressBar} />
+                            <audio src={this.state.data.file} preload type="audio/mp3" ref={this.playPause} onTimeUpdate={(e) => { this.audioProgress(e) }} onEnded={() => this.handleShuffle}> </audio>
+                            <input type="range" class={classes.Progressbar} min="0" max={this.state.audioDuration} ref={this.inputProgress} className={classes.AudiProgressBar} value={this.state.currentDuration} onChange={(e) => this.handleProgressBar(e)} />
 
                         </div>
                         <div className={classes.ControlStyle}>
@@ -186,8 +213,16 @@ export default class PlayerPage extends Component {
                             </div>
 
                             <div className={classes.AudioDurationWrapper}>
+                                {this.state.audioDuration ?
+                                    <p className={classes.AudioDuration}>
 
-                                <p className={classes.AudioDuration}>{((Math.floor((this.state.currentDuration) / 60)) > 10 ) ? (Math.floor((this.state.currentDuration) / 60)) : "0"+(Math.floor((this.state.currentDuration) / 60))} : {((Math.floor(this.state.currentDuration) % 60) > 10) ? (Math.floor(this.state.currentDuration) % 60) : "0" + (Math.floor(this.state.currentDuration) % 60) } / {(((this.state.audioDuration) / 60).toFixed(2)).split(".").join(":")}</p>
+                                        {(Math.floor((this.state.currentDuration / 60)))}:{Math.floor((this.state.currentDuration % 60))}
+                                /{(Math.floor((this.state.audioDuration / 60)))}:{Math.floor((this.state.audioDuration % 60))}</p> :
+                                    <p className={classes.AudioDuration}>
+
+                                        0:00
+                                / 0:00</p>
+                                }
 
                                 <input type="range" className={classes.AudioController} onChange={(e) => this.HandleAudioRange(e)} />
                                 {
