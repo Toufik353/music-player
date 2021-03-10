@@ -21,7 +21,7 @@ export default class PlayerPage extends Component {
             currentDuration: 0,
             audioMute: false,
             currentProgressBar: 0,
-            shuffleStatus : false
+            shuffleStatus: false
 
         }
     }
@@ -169,20 +169,24 @@ export default class PlayerPage extends Component {
 
     handleShuffle = () => {
         alert(this.state.shuffleStatus)
-        if(this.state.shuffleStatus === true){
-        // alert(Math.floor(Math.random() * 7))
-        let randomNum = (Math.floor(Math.random() * 7))
-        alert(randomNum)
-        if (randomNum !== 0 || randomNum !== 2) {
-            this.setState({ id: randomNum })
+        if (this.state.shuffleStatus === true) {
+            // alert(Math.floor(Math.random() * 7))
+            this.playPause.current.play()
+            let randomNum = (Math.floor(Math.random() * 7))
+
+            alert(randomNum)
+            if (randomNum !== 0 || randomNum !== 2) {
+                this.setState({ id: randomNum })
+                this.setState({playButton : 'false'})
+                this.playPause.current.play()
+            }
         }
     }
-}
 
 
-    HandleShuffleState =()=>{
-       alert("clicked")
-       this.setState({shuffleStatus : !this.state.shuffleStatus})
+    HandleShuffleState = () => {
+        alert("clicked")
+        this.setState({ shuffleStatus: !this.state.shuffleStatus })
     }
     render() {
 
@@ -207,7 +211,7 @@ export default class PlayerPage extends Component {
                         <div className={classes.ControlWrapper}>
 
                             {/* // onTimeUpdate inbuild method to keep updating the time every seconde with refrence to the current time */}
-                            <audio src={this.state.data.file} preload type="audio/mp3" ref={this.playPause} onTimeUpdate={(e) => { this.audioProgress(e) }}  onEnded={() => this.handleShuffle()}> </audio>
+                            <audio src={this.state.data.file} preload type="audio/mp3" ref={this.playPause} onTimeUpdate={(e) => { this.audioProgress(e) }} onEnded={() => this.handleShuffle()}> </audio>
                             <input type="range" class={classes.Progressbar} min="0" max={this.state.audioDuration} ref={this.inputProgress} className={classes.AudiProgressBar} value={this.state.currentDuration} onChange={(e) => this.handleProgressBar(e)} />
 
                         </div>
@@ -215,7 +219,7 @@ export default class PlayerPage extends Component {
                             <p className={classes.SongNames}>{this.state.data.track}</p>
                             <div className={classes.Icons}>
 
-                                < FontAwesomeIcon icon={faRandom} className={this.state.shuffleStatus === true ?  classes.RandomButtonColor : classes.RandomButton } onClick={this.HandleShuffleState}/>
+                                < FontAwesomeIcon icon={faRandom} className={this.state.shuffleStatus === true ? classes.RandomButtonColor : classes.RandomButton} onClick={this.HandleShuffleState} />
                                 < FontAwesomeIcon icon={faStepBackward} className={classes.backwordButton} onClick={this.HandleBackwordButton} />
                                 {this.state.playButton === "true" ?
                                     < FontAwesomeIcon icon={faPlayCircle} className={classes.PlayButton} onClick={this.HandlePlay} />
