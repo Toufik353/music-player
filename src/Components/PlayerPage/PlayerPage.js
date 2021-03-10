@@ -36,10 +36,10 @@ export default class PlayerPage extends Component {
                 console.log(response.data)
                 // alert("cdm")
                 // this.setState({currentProgressBar:0})
-               
 
-                    this.setState({ data: response.data })
-                
+
+                this.setState({ data: response.data })
+
                 console.log(this.state.data.file.duration)
                 this.setState({ audioDuration: this.playPause.current.duration })
                 // this.setState({ audioDuration: JSON.parse(this.playPause.current.duration )})
@@ -167,8 +167,13 @@ export default class PlayerPage extends Component {
     }
 
     handleShuffle = () => {
-        console.log(Math.floor(Math.random) * 6)
-        //    alert("hey")
+        alert("Ended")
+        // alert(Math.floor(Math.random() * 7))
+        let randomNum = (Math.floor(Math.random() * 7))
+        alert(randomNum)
+        if (randomNum !== 0 || randomNum !== 2) {
+            this.setState({ id: randomNum })
+        }
     }
 
     render() {
@@ -194,7 +199,7 @@ export default class PlayerPage extends Component {
                         <div className={classes.ControlWrapper}>
 
                             {/* // onTimeUpdate inbuild method to keep updating the time every seconde with refrence to the current time */}
-                            <audio src={this.state.data.file} preload type="audio/mp3" ref={this.playPause} onTimeUpdate={(e) => { this.audioProgress(e) }} onEnded={() => this.handleShuffle}> </audio>
+                            <audio src={this.state.data.file} preload type="audio/mp3" ref={this.playPause} onTimeUpdate={(e) => { this.audioProgress(e) }} onEnded={() => this.handleShuffle()}> </audio>
                             <input type="range" class={classes.Progressbar} min="0" max={this.state.audioDuration} ref={this.inputProgress} className={classes.AudiProgressBar} value={this.state.currentDuration} onChange={(e) => this.handleProgressBar(e)} />
 
                         </div>
