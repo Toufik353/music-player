@@ -130,7 +130,14 @@ export default class PlayerPage extends Component {
         if (e.target.value != 0) {
             this.setState({ value: (e.target.value / 100), v: (e.target.value / 100) })
             console.log(e.target.value / 100)
-            this.playPause.current.volume = this.state.value;
+            if (this.state.audioMute === true) {
+                this.setState({ value: 0 })
+            this.playPause.current.volume = this.state.value
+            }
+            else {
+                this.setState({ value: this.state.v })
+                this.playPause.current.volume = this.state.value
+            }
         } else {
             this.setState({ value: 0 })
             this.playPause.current.volume = 0
@@ -150,16 +157,16 @@ export default class PlayerPage extends Component {
     //     }
     // }
 
-     HandleMuteUnMute = () => {
+    HandleMuteUnMute = () => {
         this.setState({ audioMute: !this.state.audioMute })
 
-       if(this.state.audioMute === true){
-           this.setState({value : 0})
-           this.playPause.current.volume = this.state.value
-       }else{
-           this.setState({value : this.state.v})
-           this.playPause.current.volume = this.state.value
-       }
+        if (this.state.audioMute === true) {
+            this.setState({ value: 0 })
+            this.playPause.current.volume = this.state.value
+        } else {
+            this.setState({ value: this.state.v })
+            this.playPause.current.volume = this.state.value
+        }
     }
 
 
@@ -197,7 +204,7 @@ export default class PlayerPage extends Component {
         // alert(this.state.loopStatus)
         // if(on)
         if (this.state.loopStatus === true) {
-            this.setState({ value :  0 })
+            this.setState({ value: 0 })
             this.playPause.current.play()
         }
     }
