@@ -56,6 +56,10 @@ body{
     color:darkgoldenrod
 }
 
+.RepeatButtonSelected{
+    color: darkgoldenrod;
+}
+
 .ControlWrapper{
     display: flex;
     flex-direction: column;

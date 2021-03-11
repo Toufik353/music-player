@@ -21,7 +21,8 @@ export default class PlayerPage extends Component {
             currentDuration: 0,
             audioMute: false,
             currentProgressBar: 0,
-            shuffleStatus: false
+            shuffleStatus: false,
+            loopStatus: false
 
         }
     }
@@ -168,7 +169,7 @@ export default class PlayerPage extends Component {
     }
 
     handleShuffle = () => {
-        alert(this.state.shuffleStatus)
+        // alert(this.state.shuffleStatus)
         if (this.state.shuffleStatus === true) {
             // alert(Math.floor(Math.random() * 7))
             this.playPause.current.play()
@@ -177,17 +178,41 @@ export default class PlayerPage extends Component {
             alert(randomNum)
             if (randomNum !== 0 || randomNum !== 2) {
                 this.setState({ id: randomNum })
-                this.setState({playButton : 'false'})
+                this.setState({ playButton: 'false' })
                 this.playPause.current.play()
             }
         }
+        // alert(this.state.loopStatus)
+        // if(on)
+        if (this.state.loopStatus === true) {
+            this.setState({ value :  0 })
+            this.playPause.current.play()
+        }
     }
+
 
 
     HandleShuffleState = () => {
         alert("clicked")
         this.setState({ shuffleStatus: !this.state.shuffleStatus })
     }
+
+    HandleLoopStatus = () => {
+
+        this.setState({ loopStatus: !this.state.loopStatus })
+    }
+    // HandleLoop = () => {
+    //     alert(this.state.loopStatus)
+    //     // if(on)
+    //     if (this.state.loopStatus === true) {
+    //         this.setState((prevState, prevProps) => {
+    //             return ({ id: prevState.id + 1 })
+    //         })
+    //     }
+    // }
+
+
+
     render() {
 
         // console.log(this.state.AudioDuration)
@@ -213,7 +238,6 @@ export default class PlayerPage extends Component {
                             {/* // onTimeUpdate inbuild method to keep updating the time every seconde with refrence to the current time */}
                             <audio src={this.state.data.file} preload type="audio/mp3" ref={this.playPause} onTimeUpdate={(e) => { this.audioProgress(e) }} onEnded={() => this.handleShuffle()}> </audio>
                             <input type="range" class={classes.Progressbar} min="0" max={this.state.audioDuration} ref={this.inputProgress} className={classes.AudiProgressBar} value={this.state.currentDuration} onChange={(e) => this.handleProgressBar(e)} />
-
                         </div>
                         <div className={classes.ControlStyle}>
                             <p className={classes.SongNames}>{this.state.data.track}</p>
@@ -226,7 +250,7 @@ export default class PlayerPage extends Component {
                                     :
                                     < FontAwesomeIcon icon={faPauseCircle} className={classes.PlayButton} onClick={this.HandlePlay} />}
                                 < FontAwesomeIcon icon={faStepForward} className={classes.ForwordButton} onClick={this.HandleForwordButton} />
-                                < FontAwesomeIcon icon={faRedoAlt} className={classes.RepeatButton} />
+                                < FontAwesomeIcon icon={faRedoAlt} className={this.state.loopStatus === true ? classes.RepeatButtonSelected : classes.RepeatButton} onEnded={() => this.handleShuffle()} onClick={this.HandleLoopStatus} />
                             </div>
 
                             <div className={classes.AudioDurationWrapper}>
