@@ -138,16 +138,28 @@ export default class PlayerPage extends Component {
     }
 
 
-    HandleMuteUnMute = () => {
+    // HandleMuteUnMute = () => {
+    //     this.setState({ audioMute: !this.state.audioMute })
+
+    //     if (this.state.audioDuration !== false) {
+    //         this.setState({ value: 0 })
+    //         this.playPause.current.volume = this.state.value;
+    //     } else {
+    //         this.setState({ value: this.state.v })
+    //         this.playPause.current.volume = this.state.v;
+    //     }
+    // }
+
+     HandleMuteUnMute = () => {
         this.setState({ audioMute: !this.state.audioMute })
 
-        if (this.state.audioDuration !== false) {
-            this.setState({ value: 0 })
-            this.playPause.current.volume = this.state.value;
-        } else {
-            this.setState({ value: this.state.v })
-            this.playPause.current.volume = this.state.v;
-        }
+       if(this.state.audioMute === true){
+           this.setState({value : 0})
+           this.playPause.current.volume = this.state.value
+       }else{
+           this.setState({value : this.state.v})
+           this.playPause.current.volume = this.state.value
+       }
     }
 
 
