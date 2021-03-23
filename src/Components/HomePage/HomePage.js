@@ -28,6 +28,10 @@ export class HomePage extends Component {
     }
     render() {
         console.log(this.state.dataLength)
+// if(this.props.inp.split("").length !== 0){
+//     this.state.musicData.track.includes(this.props.inp)
+// }
+
         let musicCards = this.state.musicData.map(item => {
             return (
                 <Link to={{
